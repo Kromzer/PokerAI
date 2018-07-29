@@ -1,17 +1,22 @@
 package fr.kromzer.pokerai.enums;
 
 public enum RanksEnum {
-	TWO(2, "2"), THREE(4, "3"), FOUR(8, "4"), FIVE(16, "5"), SIX(32, "6"), SEVEN(64, "7"), EIGHT(128, "8"), NINE(256,
-			"9"), TEN(512, "10"), JACK(1024, "J"), QUEEN(2048, "Q"), KING(4096, "K"), ACE(8193, "A");
+	TWO(2, "2", 1), THREE(4, "3", 1.5f), FOUR(8, "4", 2), FIVE(16, "5", 2.5f), SIX(32, "6", 3), SEVEN(64, "7",
+			3.5f), EIGHT(128, "8", 4), NINE(256, "9", 4.5f), TEN(512, "10",
+					5), JACK(1024, "J", 6), QUEEN(2048, "Q", 7), KING(4096, "K", 8), ACE(8193, "A", 10);
 
 	/** Rank's value. */
 	private Integer value;
 
 	private String str;
 
-	private RanksEnum(Integer value, String str) {
+	/** Rank Chen score. */
+	private float chenScore;
+
+	private RanksEnum(Integer value, String str, float chenScore) {
 		this.value = value;
 		this.str = str;
+		this.chenScore = chenScore;
 	}
 
 	/**
@@ -141,6 +146,34 @@ public enum RanksEnum {
 	}
 
 	/**
+	 * Method used for Chen's score calculation.
+	 * @param otherRank the rank of the other card
+	 * @return the gap between the two
+	 */
+	public int getGap(RanksEnum otherRank) {
+		final int add = this.getValue() + otherRank.getValue();
+
+		int count = 0;
+		boolean countStarted = false;
+		for (int i = 14; i >= 0; i--) {
+			if ((add >> i & 1) == 1) {
+				if (!countStarted) {
+					countStarted = true;
+				}
+				else {
+					count++;
+					break;
+				}
+			}
+			if ((add >> i & 1) == 0 && countStarted) {
+				count++;
+			}
+		}
+
+		return count - 1;
+	}
+
+	/**
 	 * Get rank value.
 	 * @return the rank's value
 	 */
@@ -154,5 +187,9 @@ public enum RanksEnum {
 	 */
 	public String getStr() {
 		return this.str;
+	}
+
+	public final float getChenScore() {
+		return this.chenScore;
 	}
 }

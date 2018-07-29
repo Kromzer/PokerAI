@@ -39,14 +39,6 @@ public class Card {
 	}
 
 	/**
-	 * Setter for the card's suit.
-	 * @param suit the suit too set
-	 */
-	public final void setSuit(SuitsEnum suit) {
-		this.suit = suit;
-	}
-
-	/**
 	 * Sort cards (only used for Hand.toString() method).
 	 * @param cards the cards to sort
 	 */
@@ -59,6 +51,16 @@ public class Card {
 				return c1.getSuit().getValue() - c2.getSuit().getValue();
 			}
 		});
+	}
+
+	/**
+	 * Get the highest card between the two.
+	 * @param card1 the first card
+	 * @param card2 the second card
+	 * @return the highest card between the two
+	 */
+	public static Card getHighest(Card card1, Card card2) {
+		return (card1.getRank().getValue() > card2.getRank().getValue()) ? card1 : card2;
 	}
 
 	@Override

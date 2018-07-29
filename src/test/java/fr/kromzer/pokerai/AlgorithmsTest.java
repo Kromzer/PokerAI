@@ -51,4 +51,36 @@ public class AlgorithmsTest {
 		final float res = Algorithms.computeEHS(myHand, flop, 1);
 		assertEquals(0.511, res, 0.0009);
 	}
+
+	@Test
+	public void testGetChenScore() {
+		final Card card = new Card(RanksEnum.TWO, SuitsEnum.DIAMOND);
+		final Card card2 = new Card(RanksEnum.SEVEN, SuitsEnum.CLUB);
+
+		final Card card3 = new Card(RanksEnum.ACE, SuitsEnum.DIAMOND);
+		final Card card4 = new Card(RanksEnum.KING, SuitsEnum.DIAMOND);
+
+		final Card card5 = new Card(RanksEnum.FIVE, SuitsEnum.DIAMOND);
+		final Card card6 = new Card(RanksEnum.SEVEN, SuitsEnum.DIAMOND);
+
+		final Card card7 = new Card(RanksEnum.ACE, SuitsEnum.DIAMOND);
+		final Card card8 = new Card(RanksEnum.ACE, SuitsEnum.CLUB);
+
+		final Card card9 = new Card(RanksEnum.FIVE, SuitsEnum.DIAMOND);
+		final Card card10 = new Card(RanksEnum.FIVE, SuitsEnum.CLUB);
+
+		final Card card11 = new Card(RanksEnum.TWO, SuitsEnum.DIAMOND);
+		final Card card12 = new Card(RanksEnum.TWO, SuitsEnum.CLUB);
+
+		final Card card13 = new Card(RanksEnum.TWO, SuitsEnum.DIAMOND);
+		final Card card14 = new Card(RanksEnum.SIX, SuitsEnum.CLUB);
+
+		assertEquals(-1, Algorithms.getChenScore(card, card2));
+		assertEquals(12, Algorithms.getChenScore(card3, card4));
+		assertEquals(6, Algorithms.getChenScore(card5, card6));
+		assertEquals(20, Algorithms.getChenScore(card7, card8));
+		assertEquals(6, Algorithms.getChenScore(card9, card10));
+		assertEquals(5, Algorithms.getChenScore(card11, card12));
+		assertEquals(-1, Algorithms.getChenScore(card13, card14));
+	}
 }

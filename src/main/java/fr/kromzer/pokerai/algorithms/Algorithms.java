@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import fr.kromzer.pokerai.enums.RanksEnum;
 import fr.kromzer.pokerai.iterator.CombinationIterator;
 import fr.kromzer.pokerai.utils.Card;
 import fr.kromzer.pokerai.utils.Deck;
@@ -149,4 +150,47 @@ public class Algorithms {
 		return (float) Math.pow(hs, nbOpponents);
 	}
 
+	/**
+	 * Method to get the Chen score of a starting hand.
+	 * @param card1 the first card of the starting hand
+	 * @param card2 the second card of the starting hand
+	 * @return the Chen score
+	 */
+	public static int getChenScore(Card card1, Card card2) {
+		float score = (card1.getRank().getChenScore() > card2.getRank().getChenScore()) ? card1.getRank().getChenScore()
+				: card2.getRank().getChenScore();
+
+		if (card1.getRank() == card2.getRank()) {
+			score *= 2;
+			if (score < 5) {
+				score = 5;
+			}
+			if (card1.getRank() == RanksEnum.FIVE) {
+				score = 6;
+			}
+		}
+		else {
+			if (card1.getSuit() == card2.getSuit()) {
+				score += 2;
+			}
+
+			final int gap = card1.getRank().getGap(card2.getRank());
+			if (gap >= 1) {
+				if (gap == 1 || gap == 2) {
+					score -= gap;
+				}
+				else if (gap == 3) {
+					score -= 4;
+				}
+				else {
+					score -= 5;
+				}
+			}
+
+			if ((Card.getHighest(card1, card2)).getRank().getValue() < RanksEnum.QUEEN.getValue() && gap <= 1) {
+				score++;
+			}
+		}
+		return (int) Math.ceil(score);
+	}
 }
