@@ -634,4 +634,40 @@ public class HandTest {
 		assertEquals(HandsEnum.HIGH_CARD, opHand.getHandStrength());
 		assertEquals(0, hand.compareTo(opHand));
 	}
+	
+	@Test
+	public void toDelete() {
+		final Card card1 = new Card(RanksEnum.THREE, SuitsEnum.CLUB);
+		final Card card2 = new Card(RanksEnum.NINE, SuitsEnum.HEART);
+		final Card card3 = new Card(RanksEnum.ACE, SuitsEnum.CLUB);
+
+		final Card card6 = new Card(RanksEnum.FOUR, SuitsEnum.CLUB);
+		final Card card7 = new Card(RanksEnum.EIGHT, SuitsEnum.SPADE);
+
+		final Card card8 = new Card(RanksEnum.TWO, SuitsEnum.SPADE);
+		final Card card9 = new Card(RanksEnum.EIGHT, SuitsEnum.HEART);
+
+		final List<Card> river = new ArrayList<>();
+		river.add(card1);
+		river.add(card2);
+		river.add(card3);
+
+		final List<Card> myCards = new ArrayList<>();
+		myCards.addAll(river);
+		myCards.add(card6);
+		myCards.add(card7);
+
+		final List<Card> opCards = new ArrayList<>();
+		opCards.addAll(river);
+		opCards.add(card8);
+		opCards.add(card9);
+
+		final Hand hand = new Hand(myCards);
+
+		final Hand opHand = new Hand(opCards);
+
+		assertEquals(HandsEnum.HIGH_CARD, hand.getHandStrength());
+		assertEquals(HandsEnum.HIGH_CARD, opHand.getHandStrength());
+		assertEquals(0, hand.compareTo(opHand));
+	}
 }

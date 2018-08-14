@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import fr.kromzer.pokerai.enums.HandsEnum;
 import fr.kromzer.pokerai.enums.RanksEnum;
 
 public class Hand {
+	
+	/** Logger. */
+	private static final Logger logger = Logger.getLogger(Hand.class);
 
 	/** Cards in the hand. */
 	private final List<Card> cards;
@@ -50,6 +55,12 @@ public class Hand {
 			final int binaryValue = card.getRank().getValue();
 			this.binaryCards[card.getSuit().getValue()] += binaryValue;
 		}
+	}
+
+	public void add(Card card) {
+		this.cards.add(card);
+		final int binaryValue = card.getRank().getValue();
+		this.binaryCards[card.getSuit().getValue()] += binaryValue;
 	}
 
 	/**
@@ -102,7 +113,7 @@ public class Hand {
 			int count = 0;
 			for (int i = 14; i >= 0 && count < 5; i--) {
 				if ((this.getBinarySumCard() >> i & 1) == 1) {
-					this.figureRankCards[count] = RanksEnum.getFromValue(14 - (14 - i + 1));
+					this.figureRankCards[count] = RanksEnum.getFromValue(14 - (14 - i - 1));
 					count++;
 				}
 			}
@@ -161,7 +172,7 @@ public class Hand {
 				int count = 0;
 				for (int j = 14; j >= 0; j--) {
 					if ((this.binaryCards[i] >> j & 1) == 1 && count < 5) {
-						this.figureRankCards[count] = RanksEnum.getFromValue(14 - (14 - j + 1));
+						this.figureRankCards[count] = RanksEnum.getFromValue(14 - (14 - j - 1));
 						count++;
 					}
 					if (count == 5) {
@@ -371,26 +382,33 @@ public class Hand {
 	 * @return 1 if this > otherHand, 0 if this == otherHand, -1 if this < otherHand
 	 */
 	public int compareTo(Hand otherHand) {
-		this.computeHandValue();
-		otherHand.computeHandValue(this.getHandStrength());
-
 		int result = 0;
-		if (otherHand.getHandStrength().getValue() > this.getHandStrength().getValue()) {
-			result = -1;
-		}
-		else if (otherHand.getHandStrength().getValue() < this.getHandStrength().getValue()) {
-			result = 1;
-		}
-		else {
-			// Hands are equals, we need to check more specifically
-			this.computeFigureAndHighCards();
-			otherHand.computeFigureAndHighCards();
-
-			result = compareFigureRankCards(otherHand.getFigureRankCards());
-
-			if (result == 0) {
-				result = compareHighestCards(otherHand.getHighestCards());
+		
+		try {
+			this.computeHandValue();
+			otherHand.computeHandValue(this.getHandStrength());
+	
+			if (otherHand.getHandStrength().getValue() > this.getHandStrength().getValue()) {
+				result = -1;
 			}
+			else if (otherHand.getHandStrength().getValue() < this.getHandStrength().getValue()) {
+				result = 1;
+			}
+			else {
+				// Hands are equals, we need to check more specifically
+				this.computeFigureAndHighCards();
+				otherHand.computeFigureAndHighCards();
+	
+				result = compareFigureRankCards(otherHand.getFigureRankCards());
+	
+				if (result == 0) {
+					result = compareHighestCards(otherHand.getHighestCards());
+				}
+			}
+		}
+		catch(NullPointerException e) {
+			logger.debug(this.toString());
+			logger.debug(otherHand.toString());
 		}
 		return result;
 	}
@@ -499,6 +517,7 @@ public class Hand {
 		Card.sortCards(this.cards);
 		this.cards.forEach(c -> builder.append(c.getRank().getStr() + c.getSuit().getLetter()));
 
+		builder.append("=" + this.handStrength);
 		return builder.toString();
 	}
 }

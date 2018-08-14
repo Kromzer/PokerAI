@@ -101,7 +101,9 @@ public class Algorithms {
 		npot2 = (hp[INDEX_AHEAD][INDEX_BEHIND] + hp[INDEX_AHEAD][INDEX_TIED] / 2 + hp[INDEX_TIED][INDEX_BEHIND] / 2)
 				/ (hpTotal[INDEX_AHEAD] + hpTotal[INDEX_TIED] / 2);
 
-		return hs * (1 - npot2) + (1 - hs) * ppot2;
+		float ehs = hs * (1 - npot2) + (1 - hs) * ppot2;
+		logger.info("EHS: " + ehs);
+		return ehs;
 	}
 
 	/**

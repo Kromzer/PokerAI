@@ -2,6 +2,7 @@ package fr.kromzer.pokerai.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import fr.kromzer.pokerai.enums.RanksEnum;
@@ -55,5 +56,22 @@ public class Deck {
 	 */
 	public void removeCard(Card card) {
 		this.cards.remove(card);
+	}
+	
+	/**
+	 * Shuffle cards.
+	 */
+	public void shuffleCards() {
+		Collections.shuffle(cards);
+	}
+	
+	/**
+	 * Draw the top card.
+	 * @return the top card
+	 */
+	public Card drawTopCard() {
+		Card card = cards.get(0);
+		cards.remove(0);
+		return card;
 	}
 }
